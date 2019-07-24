@@ -1,3 +1,13 @@
+/*
+This is the top-level javascript file where code is run in the root js GUI thread.
+You can include sema helper functions in machineLearning/tfjs.worker.js that
+allow the ML-javascript-window thread to communicate with this one.
+
+Make sure to put a corresponding responder in the machineLearningWorker.onmessage
+function below...
+*/
+
+
 // import * as grammar from './language/eppGrammar.js';
 // import * as nearley from 'nearley/lib/nearley.js';
 // import * as grammar from './language/eppprocessor.js';
@@ -8,6 +18,8 @@ import nearleyWorker from 'worker-loader!./language/nearley.worker.js';
 import tfWorker from 'worker-loader!./machineLearning/tfjs.worker.js';
 import oscIO from './interfaces/oscInterface.js';
 import fileSaver from 'filesaver/src/Filesaver.js'
+import * as TA from './UI/three.app.js'
+//import {setScale} from './UI/three.app.js'
 
 import {
   AudioEngine
@@ -79,7 +91,7 @@ var saveData = (function() {
   };
 }());
 
-
+// Here you can define responders to custom functions in machineLearning/tfjs.worker.js
 let machineLearningWorker = new tfWorker();
 machineLearningWorker.onmessage = (e) => {
   // console.log("DEBUG:machineLearningWorker:onMsg ");
@@ -104,9 +116,15 @@ machineLearningWorker.onmessage = (e) => {
           let blob = new Blob([downloadData], {type: "text/plain;charset=utf-8"});
           saveData(blob, `${data.name}.data`);
         },
-        "sendcode": (data) => {
-            console.log(data);
-        }
+        "sendcode": (msg) => {
+            console.log("Received:",msg, msg.code);
+            console.log("Now try to evaluate it");
+            console.log(eval(msg.code));
+        },
+        "setscale": (msg) => { TA.setScale(msg.scale); },
+        "setbackgroundcolor": (msg) => {
+          TA.setBackgroundColor(msg.red, msg.green, msg.blue);
+        },
     };
     responders[e.data.func](e.data);
   }
@@ -283,6 +301,26 @@ function createControls() {
   // testButton.addEventListener("click", () => runTest());
 
 }
+
+function createUnderlay() {
+  console.log("Create Underlay...");
+
+  // Adjust styling of CodeMirror editors
+  var ed1, ed2;
+  var el1, el2;
+  ed1 = document.getElementById("editor1");
+  ed2 = document.getElementById("editor2");
+  ed1.getElementsByClassName("CodeMirror")[0].style.backgroundColor = "rgba(35, 35, 35, 0.2)";
+  ed2.getElementsByClassName("CodeMirror")[0].style.backgroundColor = "rgba(255, 255, 255, 0.2)";
+
+  // Initialize the underlay for Three.js
+  TA.initThree( document.querySelector( '#containerUnderlay' ) );
+  // Animate the underlay for Three.js
+  TA.animateThree();
+}
+
+
+
 
 function createModelSelector(){
 
@@ -510,7 +548,7 @@ const loadImportedSamples = () => {
 /*
  *
   DOMContentLoaded
- *
+ * MAIN ENTRY POINT FOR THE ENTIRE APPLICATION
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -553,6 +591,9 @@ document.addEventListener("DOMContentLoaded", () => {
   createAnalysers();
 
   createControls();
+
+  createUnderlay();
+
 
   oscIO.OSCResponder((msg) => {
     // console.log("OSC in:", msg);

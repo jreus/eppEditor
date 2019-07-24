@@ -1,7 +1,24 @@
+/*
+
+This file contains the mappings between epp signal processing commands
+and javascript commands in the Maximilian library.
+
+jsFuncMap contains mappings between each command and its corresponding javascript.
+
+When the language tree is parsed and decoded into signal processing instructions
+in the audio worklet, it is done in two steps:
+>> 1 >> setup, where all the necessary objects/signal generators are initialized
+and
+>> 2 >> loop, where the dsp itself happens
+
+This process happens in maxi-processor.js 
+
+You can modify jsFuncMap to include your own custom commands and
+corresponding javascript code (as function returning a string of valid javascript)
+to be included in the setup and loop sections of the Audio Worklet.
+*/
+
 var objectID = 0;
-
-
-
 
 const oscMap = {
   '@sin': "sinewave",
