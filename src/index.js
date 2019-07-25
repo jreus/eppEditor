@@ -125,6 +125,9 @@ machineLearningWorker.onmessage = (e) => {
         "setbackgroundcolor": (msg) => {
           TA.setBackgroundColor(msg.red, msg.green, msg.blue);
         },
+        "settranslate": (msg) => {
+          TA.setTranslate(msg.x, msg.y, msg.z);
+        },
     };
     responders[e.data.func](e.data);
   }
@@ -310,7 +313,7 @@ function createUnderlay() {
   var el1, el2;
   ed1 = document.getElementById("editor1");
   ed2 = document.getElementById("editor2");
-  ed1.getElementsByClassName("CodeMirror")[0].style.backgroundColor = "rgba(35, 35, 35, 0.2)";
+  ed1.getElementsByClassName("CodeMirror")[0].style.backgroundColor = "rgba(35, 35, 35, 0.4)";
   ed2.getElementsByClassName("CodeMirror")[0].style.backgroundColor = "rgba(255, 255, 255, 0.2)";
 
   // Initialize the underlay for Three.js

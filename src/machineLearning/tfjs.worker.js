@@ -70,6 +70,14 @@ var sema = {
       "blue": blue,
     });
   },
+  setTranslate: (x,y,z) => {
+    postMessage({
+      "func": "settranslate",
+      "x": x,
+      "y": y,
+      "z": z,
+    });
+  },
 };
 `);
 

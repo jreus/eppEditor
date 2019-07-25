@@ -68,3 +68,9 @@ export function setBackgroundColor(red, green, blue) {
 export function setScale(scl) {
   mesh.scale.x = scl; mesh.scale.y = scl; mesh.scale.z = scl;
 }
+
+export function setTranslate(x,y,z) {
+  mesh.position.x = x;
+  mesh.position.y = y;
+  mesh.position.z = z;
+}
