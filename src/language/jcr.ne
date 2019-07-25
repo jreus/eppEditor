@@ -16,7 +16,7 @@ const lexer = moo.compile({
   number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   semicolon:    /;/,
   funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
-  comment:      /#[A-Za-z0-9 ]+#/,
+  comment:      /#[A-Za-z0-9 \.\/\\\+]+#/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
 
