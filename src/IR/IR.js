@@ -42,12 +42,12 @@ const jsFuncMap = {
   'gt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} > ${p[1].loop}) ? 1 : 0`},
   'lt': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} < ${p[1].loop}) ? 1 : 0`},
   'mod': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} % ${p[1].loop})`},
-  'add': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} + ${p[1].loop})`},
-  'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} * ${p[1].loop})`},
-  'sub': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} - ${p[1].loop})`},
-  'div': {"setup":(o,p)=>"", "loop":(o,p)=>`(${p[0].loop} / ${p[1].loop})`},
-  'pow': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.pow(${p[0].loop},${p[1].loop})`},
-  'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Math.abs(${p[0].loop})`},
+  'add': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.add(${p[0].loop},${p[1].loop})`},
+  'mul': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.sub(${p[0].loop},${p[1].loop})`},
+  'sub': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.sub(${p[0].loop},${p[1].loop})`},
+  'div': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.div(${p[0].loop},${p[1].loop})`},
+  'pow': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.pow(${p[0].loop},${p[1].loop})`},
+  'abs': {"setup":(o,p)=>"", "loop":(o,p)=>`Module.maxiMath.abs(${p[0].loop})`},
   'env': {"setup":(o,p)=>`${o} = new Module.maxiEnv();${o}.setAttack(${p[1].loop});${o}.setDecay(${p[2].loop});${o}.setSustain(${p[3].loop});${o}.setRelease(${p[4].loop})`, "loop":(o,p)=>`${o}.adsr(1,${p[0].loop})`},
   'sum': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`(${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+")";}},
   'mix': {"setup":(o,p)=>"", "loop":(o,p)=>{let s=`((${p[0].loop}`; for(let i=1; i < p.length; i++) s += `+${p[i].loop}`; return s+`)/${p.length})`;}},
@@ -96,6 +96,7 @@ const jsFuncMap = {
 
 class IRToJavascript {
 
+
   static getNextID() {
     objectID = objectID > 9999 ? 0 : ++objectID;
     return objectID;
@@ -109,8 +110,9 @@ class IRToJavascript {
     };
   }
 
-  static traverseTree(t, code, level) {
+  static traverseTree(t, code, level, vars) {
     // console.log(`DEBUG:IR:traverseTree: level: ${level}`);
+    // console.log(vars);
     let attribMap = {
       '@lang': (ccode, el) => {
         // console.log("lang")
@@ -118,7 +120,7 @@ class IRToJavascript {
         // console.log(ccode)
         let statements = [];
         el.map((langEl) => {
-          let statementCode = IRToJavascript.traverseTree(langEl, IRToJavascript.emptyCode(), level);
+          let statementCode = IRToJavascript.traverseTree(langEl, IRToJavascript.emptyCode(), level, vars);
           console.log("@lang: " + statementCode.loop);
           ccode.setup += statementCode.setup;
           ccode.loop += statementCode.loop;
@@ -127,12 +129,12 @@ class IRToJavascript {
         return ccode;
       },
       '@sigOut': (ccode, el) => {
-        ccode = IRToJavascript.traverseTree(el, ccode, level);
+        ccode = IRToJavascript.traverseTree(el, ccode, level, vars);
         ccode.loop = `q.sigOut = ${ccode.loop};`;
         return ccode;
       },
       '@spawn': (ccode, el) => {
-        ccode = IRToJavascript.traverseTree(el, ccode, level);
+        ccode = IRToJavascript.traverseTree(el, ccode, level, vars);
         ccode.loop += ";";
         return ccode;
       },
@@ -148,7 +150,7 @@ class IRToJavascript {
 
         for (let p = 0; p < el['@params'].length; p++) {
           let params = IRToJavascript.emptyCode();
-          params = IRToJavascript.traverseTree(el['@params'][p], params, level+1);
+          params = IRToJavascript.traverseTree(el['@params'][p], params, level+1, vars);
           // console.log(params);
           allParams[p] = params;
         }
@@ -163,21 +165,35 @@ class IRToJavascript {
         return ccode;
       },
       '@setvar': (ccode, el) => {
-        let varValueCode = IRToJavascript.traverseTree(el['@varvalue'], IRToJavascript.emptyCode(), level+1);
+        // console.log("memset");
+        // console.log(vars);
+        let memIdx = vars[el['@varname']];
+        if (memIdx == undefined) {
+          memIdx = Object.keys(vars).length;
+          vars[el['@varname']] = memIdx;
+        }
+        let varValueCode = IRToJavascript.traverseTree(el['@varvalue'], IRToJavascript.emptyCode(), level+1, vars);
         ccode.setup += varValueCode.setup;
-        ccode.loop = `this.setvar(q, '${el['@varname']}', ${varValueCode.loop})`;
+        // ccode.loop = `this.setvar(q, '${el['@varname']}', ${varValueCode.loop})`;
+        ccode.loop = `(mem[${memIdx}] = ${varValueCode.loop})`;
         return ccode;
       },
       '@getvar': (ccode, el) => {
-        ccode.loop += `this.getvar(q, '${el.value}')`;
+        let memIdx = vars[el.value];
+        if (memIdx == undefined) {
+          memIdx = Object.keys(vars).length;
+          vars[el.value] = memIdx;
+        }
+        // ccode.loop += `this.getvar(q, '${el.value}')`;
+        ccode.loop += `mem[${memIdx}]`;
         return ccode;
       },
       '@string': (ccode, el) => {
         if (typeof el === 'string' || el instanceof String) {
-          console.log("String: " + el);
+          // console.log("String: " + el);
           ccode.loop += `'${el}'`;
         } else {
-          ccode = IRToJavascript.traverseTree(el, ccode, level);
+          ccode = IRToJavascript.traverseTree(el, ccode, level, vars);
         }
         return ccode;
       },
@@ -210,9 +226,10 @@ class IRToJavascript {
 
   static treeToCode(tree) {
     // console.log(tree);
-    let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0);
+    let vars = {};
+    let code = IRToJavascript.traverseTree(tree, IRToJavascript.emptyCode(), 0, vars);
     code.setup = `() => {let q=this.newq(); ${code.setup}; return q;}`;
-    code.loop = `(q, inputs) => {${code.loop} return q.sigOut;}`
+    code.loop = `(q, inputs, mem) => {${code.loop} return q.sigOut;}`
     console.log(code.loop);
     // console.log(code.paramMarkers);
     return code;
