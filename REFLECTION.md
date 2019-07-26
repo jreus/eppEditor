@@ -12,8 +12,8 @@ Goals.............
 
 
 
-![](firstviz.mp4)
-
+<iframe src="https://player.vimeo.com/video/350327092" width="640" height="398" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+<p><a href="https://vimeo.com/350327092">SEMA microlanguage connecting to visuals 2</a> from <a href="https://vimeo.com/jonathanreus">Jonathan Reus</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 
 
 
@@ -71,10 +71,13 @@ sound & visuals via language making are a powerful way of exploring these APIs i
 
 also for meta-language/environments to be able to explore these apis, processes, algorithms anatomically
 
+![](anat1.png)
+
+
 [Anatomies of Intelligence](https://anatomiesofintelligence.github.io/)
 
-[Anatomy of a K-means Clustering](https://vimeo.com/349275955)
-
+<iframe src="https://player.vimeo.com/video/349275955" width="640" height="394" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+<p><a href="https://vimeo.com/349275955">K-means Clustering (excerpt)</a> from <a href="https://vimeo.com/jonathanreus">Jonathan Reus</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 
 
 __barriers to usage in daily artistic work?__
