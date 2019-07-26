@@ -72,6 +72,8 @@ __barriers to usage in daily artistic work?__
 
 difficulty in bridging datasets & various media with the sandboxed environment of the browser/maximilian/tensorflow (or whatever the ML api du jour is in the future...)
 
+extensibility / sharability? ~~ how to grab new maxi ugens and integrate them into your language: is 'ugen' the right conceptual reference for these kinds of extensions in a system like SEMA?
+
 complexity increases dramatically as your desires expand beyond the basic system (epp language + exposed Maximillian API)
 
 the process of making your own language that deviates significantly from the epp language is extremely difficult and limits the artistic exploration of expressive language
