@@ -8,15 +8,6 @@ Sema is a playground where you can rapid prototype mini-languages for live codin
 
 # MIMIC Summer Workshop 2019
 
-Goals.............
-
-
-
-<iframe src="https://player.vimeo.com/video/350327092" width="640" height="398" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-<p><a href="https://vimeo.com/350327092">SEMA microlanguage connecting to visuals 2</a> from <a href="https://vimeo.com/jonathanreus">Jonathan Reus</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
-
-
-
 ### What does the Browser offer?
 * an extremely flexible platform ~~ javascript :-X  ~~ HTML ~~ css ~~ that can be molded and modified to one's heart's content
 
@@ -71,14 +62,11 @@ sound & visuals via language making are a powerful way of exploring these APIs i
 
 also for meta-language/environments to be able to explore these apis, processes, algorithms anatomically
 
-![](anat1.png)
+![](anat1.jpg)
 
 
 [Anatomies of Intelligence](https://anatomiesofintelligence.github.io/)
-
-<iframe src="https://player.vimeo.com/video/349275955" width="640" height="394" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-<p><a href="https://vimeo.com/349275955">K-means Clustering (excerpt)</a> from <a href="https://vimeo.com/jonathanreus">Jonathan Reus</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
-
+[A K-means Clustering](https://vimeo.com/349275955)
 
 __barriers to usage in daily artistic work?__
 
