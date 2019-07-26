@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ThreeJS Playground</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<link href="./style/index.css" rel="stylesheet" type="text/css">
+	<script src="./jcr/three.min.js"></script>
+</head>
+
+<body>
+
+	<div id="container">
+		<div id="overlay"></div>
+		<div id="containerUnderlay" style="position: absolute; width: 100%; height: 100%"></div>
+	</div>
+
+	<script type="text/javascript">
+
+	console.log("<<<<");
+
+	let container, camera, renderer, scene, mesh, line;
+	let frameRate;
+	const things = new Array(100);
+	const protectedObjects = [0, 1, 2];
+	const LINE_BOUNDS = 2.0;
+	const LINE_POINTS = 20;
+
+
+
+	function setBackgroundColor(red, green, blue) {
+	  scene.background = new THREE.Color( "rgb("+red+", "+green+", "+blue+")" );
+	}
+
+	function remove(id) {
+		if(protectedObjects.includes(id)) {
+				console.warn("Cannot remove protected object "+id);
+		} else {
+			scene.remove(things[id]);
+			things[id] = null;
+		}
+	}
+
+	function scale(id, scl=1) {
+		let obj = things[id];
+	  obj.scale.x = obj.scale.y = obj.scale.z = scl;
+	}
+
+	function translate(id,x=0,y=0,z=0) {
+		let obj = things[id];
+		obj.position.x = x; obj.position.y = y; obj.position.z = z;
+	}
+
+	function rotate(id,x=0,y=0,z=0) {
+		let obj = things[id];
+		obj.rotation.x = x; obj.rotation.y = y; obj.rotation.z = z;
+	}
+
+	function makeCube(id,scene,h=1,w=1,d=1,color=0x800080) {
+		let obj = new THREE.Mesh( new THREE.BoxBufferGeometry(h,w,d), new THREE.MeshStandardMaterial( { color: color } ));
+		scene.add(obj);
+		scene.remove(things[id]);
+		things[id] = obj;
+		return obj;
+	}
+
+	function updateCube(id=0) {
+		things[id].rotation.z += 0.01;
+		things[id].rotation.x += 0.01;
+		things[id].rotation.y += 0.01;
+	}
+
+
+
+
+	function makeLine(id,scene,color=0xA000A0) {
+			let geo = new THREE.BufferGeometry();
+
+			// attributes
+			let positions = new Float32Array( LINE_POINTS * 3 ); // 3 vertices per point
+			let index = 0;
+			let x,y=0.0,z=0.0;
+			// generate some positions
+			let inc = (LINE_BOUNDS * 2) / LINE_POINTS;
+			for(let i = LINE_BOUNDS * -1; i < LINE_BOUNDS; i += inc) {
+				x = i;
+				positions[index++] = x;
+				positions[index++] = y;
+				positions[index++] = z;
+				y += ((Math.random() - 0.5) / 5);
+			}
+
+			geo.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+			// drawcalls
+			var drawCount = LINE_POINTS; // draw the first x points
+			geo.setDrawRange( 0, drawCount );
+			// material
+			let mat = new THREE.LineBasicMaterial( { color: color, linewidth: 10.0 } );
+
+			// line
+			let obj = new THREE.Line( geo,  mat );
+			scene.add( obj );
+			things[id] = obj;
+
+			obj.geometry.attributes.position.needsUpdate = true; // required after the first render
+			obj.geometry.verticesNeedUpdate = true;
+
+			return obj;
+	}
+
+	function updateLine(id=2) {
+		let obj = things[id];
+		let positions = obj.geometry.attributes.position.array;
+		let index = 0;
+		for ( let i = 0, l = LINE_POINTS; i < l; i++ ) {
+				positions[ index ++ ] += 0;
+				positions[ index ++ ] += (Math.random()-0.5) * 0.1;
+				positions[ index ++ ] += 0;
+		}
+		obj.geometry.attributes.position.needsUpdate = true; // required after the first render
+		obj.geometry.verticesNeedUpdate = true;
+
+		obj.geometry.computeBoundingSphere();
+	}
+
+	function initThree(containerDIV, fps) {
+	  console.log("InitThree");
+
+	  // Get a reference to the container element that will hold our scene
+	  container = containerDIV;
+	  frameRate = fps;
+	  // create a Scene
+	  scene = new THREE.Scene();
+	  scene.background = new THREE.Color( 0x8FBCD4 );
+
+	  // set up the options for a perspective camera
+	  const fov = 35; // fov = Field Of View
+	  const aspect = container.clientWidth / container.clientHeight;
+	  const near = 0.1;
+	  const far = 100;
+
+	  camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
+	  // every object is initially created at ( 0, 0, 0 )
+	  // we'll move the camera back a bit so that we can view the scene
+	  camera.position.set( 0, 0, 10 );
+
+		mesh = makeCube(1, scene);
+		line = makeLine(0, scene, 0x000000);
+
+		// Create a directional light
+	  const light = new THREE.DirectionalLight( 0xffffff, 5.0 );
+	  light.position.set( 10, 10, 10 );
+	  scene.add( light );
+
+		// create a WebGLRenderer and set its width and height
+	  renderer = new THREE.WebGLRenderer( { antialias: true } );
+	  renderer.setSize( container.clientWidth, container.clientHeight );
+	  renderer.setPixelRatio( window.devicePixelRatio );
+	  container.appendChild( renderer.domElement );
+	}
+
+	function animateThree() {
+	  setTimeout( () => { requestAnimationFrame( animateThree ); }, 1000 / frameRate );
+
+	  // increase the mesh's rotation each frame
+		updateCube(1);
+		updateLine(0);
+
+	  // render, or 'create a still image', of the scene
+	  // this will create one still image / frame each time the animate
+	  // function calls itself
+	  renderer.render( scene, camera );
+	}
+
+
+	let start = () => {
+	  console.log("Create Underlay...");
+
+		let overlay, container;
+		container = document.querySelector('#container');
+		container.style.position = "absolute";
+		container.style.width = "100%";
+		container.style.height = "100%";
+		overlay = document.querySelector('#overlay');
+		overlay.style.backgroundColor = 'rgba(20,20,20,0.0)';
+		overlay.style.position = "absolute";
+		overlay.style.width = "100%";
+		overlay.style.height = "100%";
+
+	  // Initialize the underlay for Three.js
+	  initThree( document.querySelector( '#containerUnderlay' ) );
+	  // Animate the underlay for Three.js
+	  animateThree();
+	};
+
+	start();
+
+	</script>
+
+</body>
+</html>

@@ -269,10 +269,15 @@ body {
 }
 
 #containerButtons {
-  grid-area: footer;
+  grid-area: header;
   grid-column-start: 2/5;
   grid-column-end: 3/5;
-  z-index: 3;
+  z-index: 10;
+  overflow: visible;
+}
+
+.CodeMirror-hscrollbar {
+  visibility: hidden;
 }
 
 #containerUnderlay {

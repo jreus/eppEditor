@@ -121,12 +121,18 @@ machineLearningWorker.onmessage = (e) => {
             console.log("Now try to evaluate it");
             console.log(eval(msg.code));
         },
-        "setscale": (msg) => { TA.setScale(msg.scale); },
+        "scale": (msg) => { TA.scale(msg.id, msg.scale); },
         "setbackgroundcolor": (msg) => {
           TA.setBackgroundColor(msg.red, msg.green, msg.blue);
         },
-        "settranslate": (msg) => {
-          TA.setTranslate(msg.x, msg.y, msg.z);
+        "translate": (msg) => {
+          TA.translate(msg.id, msg.x, msg.y, msg.z);
+        },
+        "setline": (msg) => {
+          TA.setLine(msg.id, msg.points);
+        },
+        "alert": (msg) => {
+          alert(msg.string);
         },
     };
     responders[e.data.func](e.data);

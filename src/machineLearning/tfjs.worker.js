@@ -56,10 +56,11 @@ var sema = {
       "code": code,
     });
   },
-  setScale: (scale) => {
+  scale: (id, scale) => {
     postMessage({
-      "func": "setscale",
+      "func": "scale",
       "scale": scale,
+      "id": id,
     });
   },
   setBackgroundColor: (red,green,blue) => {
@@ -70,12 +71,26 @@ var sema = {
       "blue": blue,
     });
   },
-  setTranslate: (x,y,z) => {
+  translate: (id, x,y,z) => {
     postMessage({
-      "func": "settranslate",
+      "func": "translate",
+      "id": id,
       "x": x,
       "y": y,
       "z": z,
+    });
+  },
+  setLine: (id, points) => {
+    postMessage({
+      "func": "setline",
+      "id": id,
+      "points": points,
+    });
+  },
+  alert: (string) => {
+    postMessage({
+      "func": "alert",
+      "string": string,
     });
   },
 };

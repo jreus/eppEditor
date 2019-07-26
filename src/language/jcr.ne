@@ -16,7 +16,7 @@ const lexer = moo.compile({
   number:       /-?(?:[0-9]|[1-9][0-9]+)(?:\.[0-9]+)?(?:[eE][-+]?[0-9]+)?\b/,
   semicolon:    /;/,
   funcName:     /[a-zA-Z][a-zA-Z0-9]*/,
-  comment:      /#[A-Za-z0-9 \.\/\\\+]+#/,
+  comment:      /#[A-Za-z0-9 \.\/\\\+\-\_\!\?\:\)\(]+#/,
   ws:           {match: /\s+/, lineBreaks: true},
 });
 
@@ -38,6 +38,7 @@ Statement ->
       # | %hash . "\n"                                          {% d => ({ "@comment": d[3] }) %}
       |
       Expression _ %semicolon
+
 
 Expression ->
   %funcName ParameterList
