@@ -76,6 +76,8 @@ extensibility / sharability? ~~ how to grab new maxi ugens and integrate them in
 
 complexity increases dramatically as your desires expand beyond the basic system (epp language + exposed Maximillian API)
 
+...I found myself designing more into the javascript language than into my SEMA language
+
 the process of making your own language that deviates significantly from the epp language is extremely difficult and limits the artistic exploration of expressive language
 
 styling/expressing/using the language is not easily customized (e.g. see Elina's performance)
