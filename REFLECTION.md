@@ -10,6 +10,8 @@ Sema is a playground where you can rapid prototype mini-languages for live codin
 
 Goals.............
 
+
+
 ![](firstviz.mp4)
 
 
@@ -27,6 +29,12 @@ Goals.............
 
 
 * potential for writing -> rewriting text, image and other media
+
+first experiments connecting a SEMA microlanguage to other browser apis (in this case [three.js](https://threejs.org/)) ...
+
+[video 1](https://vimeo.com/350326806)
+
+[video 2](https://vimeo.com/350327092)
 
 
 ### What does this enable me to do?
@@ -52,13 +60,22 @@ __Storytelling__
 
 __SEMA & ML__
 
-potential teaching tool ~~~ want to start doing language-making study/making interventions.. The nearley grammar making is lovely :-)
+as an exploration tool ~~~ language-making study/making interventions..
+The nearley grammar making is lovely :-)
 
 highly transferrable skills/knowledge (HTML/CSS/Javascript)
 
 heavy resource investment into new/cutting edge apis
 
-sound & visuals via language making are a powerful way of exploring these APIs in an intuitive way, also for teachers to produce meta-language/environments for students to be able to explore these apis intuitively
+sound & visuals via language making are a powerful way of exploring these APIs in an intuitive way
+
+also for meta-language/environments to be able to explore these apis, processes, algorithms anatomically
+
+[Anatomies of Intelligence](https://anatomiesofintelligence.github.io/)
+
+[Anatomy of a K-means Clustering](https://vimeo.com/349275955)
+
+
 
 __barriers to usage in daily artistic work?__
 
